@@ -1,0 +1,48 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table servidor {
+  id integer [primary key]
+  nome varchar
+  setor varchar
+  email varchar
+  created_at timestamp
+}
+
+Table documentos {
+  id integer [primary key]
+  titulo varchar
+  descricao text [note: 'Descrição ou resumo do documento']
+  caminho_arquivo varchar [note: 'Localização do arquivo importado']
+  id_analista integer [not null]
+  data_importacao timestamp
+  nome_coordenador varchar
+  nome_aluno varchar
+  cpf varchar
+  carga_horaria numeric(6,2) [note: 'Carga horária total em horas']
+  status varchar [note: 'Ex: Pendente, Em análise, Concluído']
+}
+
+Table sistema {
+  id integer [primary key]
+  id_documento integer [not null]
+  id_analista integer [not null]
+  parecer text [note: 'Resultado das informações']
+  data_analise timestamp
+}
+
+Table imagens {
+  id integer [primary key]
+  id_documento integer [not null]
+  caminho_arquivo varchar [note: 'Caminho ou URL da imagem']
+  tipo_arquivo varchar [note: 'Ex: jpg, png, tiff']
+  tamanho_arquivo numeric [note: 'Tamanho do arquivo em bytes']
+  resolucao varchar [note: 'Ex: 1920x1080']
+  data_upload timestamp
+}
+
+// Relacionamentos
+Ref: documentos.id_analista > servidor.id // many-to-one
+Ref: sistema.id_documento > documentos.id // many-to-one
+Ref: sistema.id_analista > servidor.id   // many-to-one
+Ref: imagens.id_documento > documentos.id // many to one
